@@ -10,7 +10,6 @@ context.fillStyle = BASE_COLOR.fill;
 context.strokeStyle = BASE_COLOR.stroke;
 
 const game = new Game(GAME_WIDTH, GAME_HEIGHT);
-game.start();
 
 let lastTime = 0;
 

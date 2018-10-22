@@ -25,8 +25,8 @@ export const buildLevel = game =>
           (brick, brickIndex) =>
             brick
               ? new Brick(game, {
-                  x: (BRICK_WIDTH + 4) * brickIndex + 2,
-                  y: (BRICK_HEIGHT + 4) * rowIndex + 2
+                  x: BRICK_WIDTH * brickIndex,
+                  y: BRICK_HEIGHT * rowIndex
                 })
               : null
         )

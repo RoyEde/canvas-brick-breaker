@@ -1,6 +1,6 @@
 export const detectCollision = (ball, gameObject) => {
   const bottomOfBall = ball.position.y + ball.size;
-  const topOfBall = ball.position.y;
+  const topOfBall = ball.position.y - ball.size;
   const rightOfBall = ball.position.x + ball.size;
   const leftOfBall = ball.position.x;
 

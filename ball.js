@@ -1,8 +1,9 @@
 import { BALL_LINE_WITH } from './constants';
 import { BASE_COLOR } from './themes';
+import { detectCollision } from './collisionDetection';
 
 export default class Ball {
-  constructor({ gameWidth, gameHeight, paddle }, size) {
+  constructor({ gameWidth, gameHeight, paddle, level }, size) {
     this.size = size;
 
     this.gameWidth = gameWidth;
@@ -11,13 +12,13 @@ export default class Ball {
     this.paddle = paddle;
 
     this.position = {
-      x: Math.round(Math.random() * (gameWidth - size) + size),
+      x: Math.round(Math.random() * (gameWidth - size)),
       y: gameHeight / 2
     };
 
     this.speed = {
-      x: 2,
-      y: 2
+      x: level * 0.5 + 2.5,
+      y: level * 0.5 + 2.5
     };
   }
 
@@ -34,7 +35,7 @@ export default class Ball {
     context.closePath();
   }
 
-  update(deltaTime) {
+  update() {
     this.position.x += this.speed.x;
     this.position.y += this.speed.y;
 
@@ -49,16 +50,10 @@ export default class Ball {
       this.speed.y = -this.speed.y;
     }
 
-    const bottomOfBall = this.position.y + this.size;
-    const topOfPaddle = this.paddle.position.y;
-    const leftSidePaddle = this.paddle.position.x;
-    const rightSidePaddle = this.paddle.position.x + this.paddle.width;
-
-    if (
-      bottomOfBall >= topOfPaddle &&
-      this.position.x >= leftSidePaddle &&
-      this.position.x + this.size <= rightSidePaddle
-    ) {
+    if (detectCollision(this, this.paddle)) {
+      this.speed.y = Math.round(Math.random() + 0.1)
+        ? (this.speed.y += 0.4)
+        : (this.speed.y -= 0.2);
       this.speed.y = -this.speed.y;
       this.position.y = this.paddle.position.y - this.size;
     }

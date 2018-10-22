@@ -1,23 +1,36 @@
-import { BRICK_WIDTH, BRICK_HEIGHT, BRICK_LINE_WITH } from './constants';
+import { BRICK_WIDTH, BRICK_HEIGHT } from './constants';
 import { COLOR_THEME_LENGTH, COLORS } from './themes';
+import { detectCollision } from './collisionDetection';
 
 export default class Brick {
-  constructor(game, position) {
+  constructor({ ball, level }, position) {
     this.width = BRICK_WIDTH;
     this.height = BRICK_HEIGHT;
 
-    this.game = game;
+    this.ball = ball;
 
     this.position = position;
 
-    const { fill, stroke } = COLORS[game.level][
+    this.markedForDeletion = false;
+    this.hitStand = Math.floor(Math.random() * (level + 2));
+
+    const { fill } = COLORS[level][
       Math.floor(Math.random() * COLOR_THEME_LENGTH)
     ];
+
     this.fill = fill;
-    this.stroke = stroke;
   }
 
-  update(deltaTime) {}
+  update() {
+    if (detectCollision(this.ball, this)) {
+      this.ball.speed.y = Math.abs(this.ball.speed.y);
+      if (this.hitStand) {
+        this.hitStand--;
+      } else {
+        this.markedForDeletion = true;
+      }
+    }
+  }
 
   draw(context) {
     const {
@@ -27,11 +40,8 @@ export default class Brick {
     } = this;
 
     context.beginPath();
-    context.fillStyle = this.fill;
-    context.strokeStyle = this.stroke;
-    context.lineWidth = BRICK_LINE_WITH;
+    context.fillStyle = this.fill[this.hitStand];
     context.rect(x, y, width, height);
-    context.stroke();
     context.fill();
     context.closePath();
   }
