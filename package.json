@@ -1,0 +1,15 @@
+{
+  "name": "GameDevJs",
+  "version": "1.0.0",
+  "private": true,
+  "repository": "https://github.com/RoyEde/canvas-brick-breaker.git",
+  "author": "RoyEde <Roy.ede@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "webpack"
+  },
+  "dependencies": {
+    "webpack": "^4.23.1",
+    "webpack-cli": "^3.1.2"
+  }
+}
