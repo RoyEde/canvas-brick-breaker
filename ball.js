@@ -12,13 +12,13 @@ export default class Ball {
     this.paddle = paddle;
 
     this.position = {
-      x: Math.round(Math.random() * (gameWidth - size)),
+      x: Math.round((Math.random() * gameWidth) / 1.1),
       y: gameHeight / 2
     };
 
     this.speed = {
-      x: level * 0.5 + 2.5,
-      y: level * 0.5 + 2.5
+      x: level * 0.3 + 2.5,
+      y: level * 0.3 + 2.5
     };
   }
 
@@ -29,9 +29,11 @@ export default class Ball {
     } = this;
     context.beginPath();
     context.arc(x, y, size, 0, 2 * Math.PI);
+    context.fillStyle = BASE_COLOR.fill;
     context.strokeStyle = BASE_COLOR.stroke;
     context.lineWidth = BALL_LINE_WITH;
     context.stroke();
+    context.fill();
     context.closePath();
   }
 

@@ -23,7 +23,7 @@ export default class Brick {
 
   update() {
     if (detectCollision(this.ball, this)) {
-      this.ball.speed.y = Math.abs(this.ball.speed.y);
+      this.ball.speed.y = -this.ball.speed.y;
       if (this.hitStand) {
         this.hitStand--;
       } else {

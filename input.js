@@ -1,4 +1,4 @@
-import { GAMESTATE } from './game';
+import { GAMESTATE } from './constants';
 
 export default class InputHandler {
   constructor(game) {
@@ -27,6 +27,11 @@ export default class InputHandler {
         case 32:
           if (game.gameState !== GAMESTATE.RUNNING) {
             game.start();
+          }
+          break;
+        case 13:
+          if (game.gameState !== GAMESTATE.RUNNING) {
+            game.restart();
           }
           break;
       }
