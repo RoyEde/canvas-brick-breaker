@@ -22,7 +22,7 @@ export default class Game {
   }
 
   restart() {
-    this.level = 5;
+    this.level = -1;
     this.gameState = GAMESTATE.MENU;
     this.gameObjects = [];
     this.bricks = [];
@@ -111,6 +111,7 @@ export default class Game {
       );
       context.fillText(
         (this.gameState === GAMESTATE.PAUSED && 'to resume') ||
+          (this.gameState === GAMESTATE.GAMEWON && 'Press ENTER to reset') ||
           (this.gameState === GAMESTATE.MENU &&
             'ENTER while paused to reset') ||
           '',
