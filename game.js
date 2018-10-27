@@ -15,8 +15,14 @@ export default class Game {
     this.restart();
   }
 
+  reset() {
+    this.paddle = new Paddle(this);
+    this.ball = new Ball(this, BALL_SIZE);
+    this.gameObjects = [this.ball, this.paddle];
+  }
+
   restart() {
-    this.level = -1;
+    this.level = 5;
     this.gameState = GAMESTATE.MENU;
     this.gameObjects = [];
     this.bricks = [];
@@ -37,6 +43,11 @@ export default class Game {
       return;
     }
 
+    if (this.level === 5) {
+      this.gameState = GAMESTATE.GAMEWON;
+      return;
+    }
+
     [...this.gameObjects, ...this.bricks].forEach(object => object.update());
     this.bricks = this.bricks.filter(object => !object.markedForDeletion);
 
@@ -46,10 +57,14 @@ export default class Game {
 
     if (!this.bricks.length) {
       this.level++;
-      this.paddle = new Paddle(this);
-      this.ball = new Ball(this, BALL_SIZE);
-      this.gameObjects = [this.ball, this.paddle];
+      this.reset();
       this.bricks = buildLevel(this);
+    }
+
+    if (this.ball.position.y >= this.gameHeight) {
+      this.lives--;
+      this.reset();
+      this.bricks = this.bricks.map(brick => brick.reset(this.ball) || brick);
     }
   }
 
@@ -62,13 +77,15 @@ export default class Game {
     context.fillText(this.level + 1, this.gameWidth / 2, this.gameHeight / 2);
     context.closePath();
 
-    [...this.gameObjects, ...this.bricks].forEach(object =>
-      object.draw(context)
-    );
-
+    if (this.gameState !== GAMESTATE.GAMEWON) {
+      [...this.gameObjects, ...this.bricks].forEach(object =>
+        object.draw(context)
+      );
+    }
     if (
       this.gameState === GAMESTATE.PAUSED ||
       this.gameState === GAMESTATE.MENU ||
+      this.gameState === GAMESTATE.GAMEWON ||
       this.gameState === GAMESTATE.GAMEOVER
     ) {
       context.rect(0, 0, this.gameWidth, this.gameHeight);
@@ -78,20 +95,25 @@ export default class Game {
       context.fillText(
         (this.gameState === GAMESTATE.PAUSED && 'Paused') ||
           (this.gameState === GAMESTATE.MENU && 'Press SPACEBAR to start') ||
-          (this.gameState === GAMESTATE.GAMEOVER && 'GAME-OVER'),
+          (this.gameState === GAMESTATE.GAMEOVER && 'GAME-OVER') ||
+          '',
         this.gameWidth / 2,
         this.gameHeight / 2 - 56
       );
       context.fillText(
         (this.gameState === GAMESTATE.PAUSED && 'Press ESC or SPACEBAR') ||
           (this.gameState === GAMESTATE.MENU && 'Press ESC to pause') ||
+          (this.gameState === GAMESTATE.GAMEWON &&
+            'Congratulations, you won!') ||
           (this.gameState === GAMESTATE.GAMEOVER && 'Press ENTER to reset'),
         this.gameWidth / 2,
         this.gameHeight / 2
       );
       context.fillText(
         (this.gameState === GAMESTATE.PAUSED && 'to resume') ||
-          (this.gameState === GAMESTATE.MENU && 'ENTER while paused to reset'),
+          (this.gameState === GAMESTATE.MENU &&
+            'ENTER while paused to reset') ||
+          '',
         this.gameWidth / 2,
         this.gameHeight / 2 + 56
       );

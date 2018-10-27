@@ -12,7 +12,7 @@ export default class Ball {
     this.paddle = paddle;
 
     this.position = {
-      x: Math.round((Math.random() * gameWidth) / 1.1),
+      x: Math.ceil((Math.random() * gameWidth) / 1.1),
       y: gameHeight / 2
     };
 

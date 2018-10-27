@@ -21,6 +21,10 @@ export default class Brick {
     this.fill = fill;
   }
 
+  reset(ball) {
+    this.ball = ball;
+  }
+
   update() {
     if (detectCollision(this.ball, this)) {
       this.ball.speed.y = -this.ball.speed.y;
